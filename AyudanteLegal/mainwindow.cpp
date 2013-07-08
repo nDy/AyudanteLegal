@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "dirent.h"
 #include "stdio.h"
+#include "wqaction.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -54,20 +55,32 @@ MainWindow::MainWindow(QWidget *parent) :
     ArchivoGuardarComo->setText("Guardar Como");
     Archivo->addAction(ArchivoGuardarComo);
 
+    //Carga de planillas
     DIR *dir;
     struct dirent *ent;
     if ((dir = opendir ("../AyudanteLegal/Planillas")) != NULL) {
-      /* print all the files and directories within directory */
+      //Lee Los nombres de las formas
       while ((ent = readdir (dir)) != NULL) {
           printf ("Carpeta: %s\n", ent->d_name);
           DIR *formadir;
           struct dirent *formaent;
           if ((formadir = opendir (ent->d_name)) != NULL) {
-            /* print all the files and directories within directory */
+            //Lee componentes de la forma
             while ((formaent = readdir (dir)) != NULL) {
                  printf ("      Carpeta %s\n", formaent->d_name);
                  if(formaent->d_name[0]!='.'){
-                     ArchivoNuevo->addAction(formaent->d_name);
+                     WQAction* aux;
+                     QString* file;
+                     file = new QString();
+                     file->append("../AyudanteLegal/Planillas/");
+                     file->append(ent->d_name);
+                     file->append("/");
+                     file->append(formaent->d_name);
+                     QString title;
+                     title.append(formaent->d_name);
+                     aux = new WQAction(ArchivoNuevo,title,file);
+                     aux->setText(formaent->d_name);
+                     ArchivoNuevo->addAction(aux);
                  }
             }
           }
@@ -77,7 +90,6 @@ MainWindow::MainWindow(QWidget *parent) :
       /* could not open directory */
       perror ("");
     }
-
 
 //Menu Ver
     Ver = new QMenu;
