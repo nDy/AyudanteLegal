@@ -13,11 +13,9 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
-    wqaction.cpp
+        mainwindow.cpp
 
-HEADERS  += mainwindow.h \
-    wqaction.h
+HEADERS  += mainwindow.h
 
 FORMS    += mainwindow.ui
 

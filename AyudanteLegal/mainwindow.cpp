@@ -2,7 +2,7 @@
 #include "ui_mainwindow.h"
 #include "dirent.h"
 #include "stdio.h"
-#include "wqaction.h"
+#include "QLabel"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -147,11 +147,16 @@ void MainWindow::CargaPlanilla()
         QString ruta = action->objectName();
         printf ("string de ruta: %s\n", ruta.toStdString().c_str());
         QString aux;
-        aux.append("background-image: ");
         aux.append(ruta);
-        aux.append("Imagen.jpg");
-        ui->centralWidget->setStyleSheet(aux);
+        aux.append("Imagen.png");
         printf ("string auxiliar: %s\n", aux.toStdString().c_str());
+        QLabel* label;
+        label = new QLabel(ui->centralWidget);
+        QPixmap* pic;
+        pic = new QPixmap(aux);
+        QLayout *vbl = ui->centralWidget->layout();
+        vbl->addWidget(label);
+        label->setPixmap(*pic);
      }
 
 }
