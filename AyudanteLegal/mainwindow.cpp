@@ -45,21 +45,25 @@ MainWindow::~MainWindow()
 
 void MainWindow::GenerarConexiones(){
 
+    //NewFileConections
     QList<QAction*>::iterator j;
     for (j = ArchivoNuevo->actions().begin(); j != ArchivoNuevo->actions().end(); ++j) {
         QObject::connect((*j), SIGNAL(triggered()),
                          this, SLOT(CargaPlanilla()));
     }
 
+    //ResizeTextConections
 
+    //ZoomConections
     connect(VerZoomIn, SIGNAL(triggered()), this, SLOT(ZoomIn()));
     connect(VerZoomOut, SIGNAL(triggered()), this, SLOT(ZoomOut()));
+    connect(ArchivoImprimir, SIGNAL(triggered()), this, SLOT(Imprimir()));
+
 
 }
 
 void MainWindow::GenerarMenu(){
     //Menu Archivo
-
     Archivo = new QMenu;
     Archivo->setTitle("Archivo");
 
@@ -72,14 +76,12 @@ void MainWindow::GenerarMenu(){
     if ((dir = opendir ("../AyudanteLegal/Planillas")) != NULL) {
         //Lee Los nombres de las formas
         while ((ent = readdir (dir)) != NULL) {
-            printf ("Carpeta: %s\n", ent->d_name);
             DIR *formadir;
             struct dirent *formaent;
             if ((formadir = opendir (ent->d_name)) != NULL) {
                 //Lee componentes de la forma
                 while ((formaent = readdir (dir)) != NULL) {
                     if(formaent->d_name[0]!='.'){
-                        printf ("      Carpeta %s\n", formaent->d_name);
                         QAction* aux;
                         static QString* file;
                         file = new QString();
@@ -88,7 +90,6 @@ void MainWindow::GenerarMenu(){
                         file->append("/");
                         aux = new QAction(ArchivoNuevo);
                         aux->setText(formaent->d_name);
-                        printf ("%s\n", file->toStdString().c_str());
                         aux->setObjectName(*file);
                         ArchivoNuevo->addAction(aux);
                     }
@@ -97,9 +98,10 @@ void MainWindow::GenerarMenu(){
         }
         closedir (dir);
     } else {
-        /* could not open directory */
-        perror ("");
+        //No se puede abrir el directorio
+        perror ("No se puede abrir el directorio");
     }
+
 
     Archivo->addMenu(ArchivoNuevo);
 
@@ -114,6 +116,10 @@ void MainWindow::GenerarMenu(){
     ArchivoGuardarComo = new QAction(Archivo);
     ArchivoGuardarComo->setText("Guardar Como");
     Archivo->addAction(ArchivoGuardarComo);
+
+    ArchivoImprimir = new QAction(Archivo);
+    ArchivoImprimir->setText("Imprimir");
+    Archivo->addAction(ArchivoImprimir);
 
     //Menu Ver
     Ver = new QMenu;
@@ -142,10 +148,29 @@ void MainWindow::GenerarMenu(){
     //Menu Edicion
     Edicion = new QMenu;
     Edicion->setTitle("Edicion");
+    EdicionCopiar = new QAction(Edicion);
+    EdicionCopiar->setText("Copiar");
+    Edicion->addAction(EdicionCopiar);
+    EdicionCortar = new QAction(Edicion);
+    EdicionCortar->setText("Cortar");
+    Edicion->addAction(EdicionCortar);
+    EdicionPegar = new QAction(Edicion);
+    EdicionPegar->setText("Pegar");
+    Edicion->addAction(EdicionPegar);
 
     //Menu Formato
     Formato = new QMenu;
     Formato->setTitle("Formato");
+    FormatoBase = new QAction(Formato);
+    FormatoBase->setText("Base");
+    Formato->addAction(FormatoBase);
+    FormatoFuente = new QMenu(Formato);
+    FormatoFuente->setTitle("Fuente");
+    Formato->addMenu(FormatoFuente);
+    FormatoMinimo = new QAction(Formato);
+    FormatoMinimo->setText("Minimo");
+    Formato->addAction(FormatoMinimo);
+
 
     ui->menuBar->addMenu(Archivo);
     ui->menuBar->addMenu(Ver);
@@ -167,11 +192,9 @@ void MainWindow::CargaImagen()
     if(action)
     {
         QString ruta = action->objectName();
-        printf ("string de ruta: %s\n", ruta.toStdString().c_str());
         QString aux;
         aux.append(ruta);
         aux.append("Imagen.png");
-        printf ("string auxiliar: %s\n", aux.toStdString().c_str());
         label = new QLabel;
         pic = new QPixmap(aux);
         label->setPixmap(*pic);
@@ -195,7 +218,6 @@ void MainWindow::CargaTextBox()
     if(action)
     {
         QString ruta = action->objectName();
-        printf ("string de ruta: %s\n", ruta.toStdString().c_str());
         QString aux;
         aux.append(ruta);
         aux.append("Mapa.txt");
@@ -206,6 +228,7 @@ void MainWindow::CargaTextBox()
         file.readLine();
         int Xo,Yo,Xf,Yf;
 
+        CuadrosDeTexto = new QList<QLineEdit*>;
         while (!file.atEnd()) {
             QString linea = file.readLine();
             //parseline
@@ -219,6 +242,7 @@ void MainWindow::CargaTextBox()
             cuadro->setGeometry(Xo,Yo,Xf-Xo,Yf-Yo);
             cuadro->setStyleSheet("QLineEdit{background: white;}");
             cuadro->raise();
+            CuadrosDeTexto->append(cuadro);
         }
 
     }
@@ -232,6 +256,23 @@ void MainWindow::ZoomIn()
 void MainWindow::ZoomOut()
 {
     scaleImage(0.75);
+}
+
+void MainWindow::Imprimir()
+{
+    QPrinter printer;
+    QPrintDialog *dialog = new QPrintDialog(&printer, this);
+
+    if (dialog->exec() != QDialog::Accepted)
+        return;
+
+    QPainter painter;
+
+    //dibujar texto en el painter
+
+    painter.begin(&printer);
+
+
 }
 
 void MainWindow::scaleImage(double factor){

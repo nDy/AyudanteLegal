@@ -29,6 +29,9 @@
 #include <QLineEdit>
 #include <QStackedLayout>
 #include <QFile>
+#include <QPainter>
+#include <QPrintDialog>
+#include <QPrinter>
 
 namespace Ui {
 class MainWindow;
@@ -56,6 +59,7 @@ public slots:
     void CargaPlanilla();
     void ZoomIn();
     void ZoomOut();
+    void Imprimir();
     
 private:
     //ui
@@ -88,6 +92,7 @@ private:
     QAction* FormatoMinimo;
     //misc
     QPixmap* pic;
+    QList<QLineEdit*>* CuadrosDeTexto;
 
 };
 
