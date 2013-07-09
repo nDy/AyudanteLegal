@@ -36,24 +36,13 @@ MainWindow::MainWindow(QWidget *parent) :
         QAction* FormatoMinimo;
 
 //Menu Archivo
+
+
     Archivo = new QMenu;
     Archivo->setTitle("Archivo");
 
     ArchivoNuevo = new QMenu;
     ArchivoNuevo->setTitle("Nuevo");
-    Archivo->addMenu(ArchivoNuevo);
-
-    ArchivoAbrir = new QAction(Archivo);
-    ArchivoAbrir->setText("Abrir");
-    Archivo->addAction(ArchivoAbrir);
-
-    ArchivoGuardar = new QAction(Archivo);
-    ArchivoGuardar->setText("Guardar");
-    Archivo->addAction(ArchivoGuardar);
-
-    ArchivoGuardarComo = new QAction(Archivo);
-    ArchivoGuardarComo->setText("Guardar Como");
-    Archivo->addAction(ArchivoGuardarComo);
 
     //Carga de planillas
     DIR *dir;
@@ -67,19 +56,18 @@ MainWindow::MainWindow(QWidget *parent) :
           if ((formadir = opendir (ent->d_name)) != NULL) {
             //Lee componentes de la forma
             while ((formaent = readdir (dir)) != NULL) {
-                 printf ("      Carpeta %s\n", formaent->d_name);
                  if(formaent->d_name[0]!='.'){
-                     WQAction* aux;
-                     QString* file;
+                     printf ("      Carpeta %s\n", formaent->d_name);
+                     QAction* aux;
+                     static QString* file;
                      file = new QString();
                      file->append("../AyudanteLegal/Planillas/");
-                     file->append(ent->d_name);
-                     file->append("/");
                      file->append(formaent->d_name);
-                     QString title;
-                     title.append(formaent->d_name);
-                     aux = new WQAction(ArchivoNuevo,title,file);
+                     file->append("/");
+                     aux = new QAction(ArchivoNuevo);
                      aux->setText(formaent->d_name);
+                     printf ("%s\n", file->toStdString().c_str());
+                     aux->setObjectName(*file);
                      ArchivoNuevo->addAction(aux);
                  }
             }
@@ -90,6 +78,26 @@ MainWindow::MainWindow(QWidget *parent) :
       /* could not open directory */
       perror ("");
     }
+
+    QList<QAction*>::iterator j;
+    for (j = ArchivoNuevo->actions().begin(); j != ArchivoNuevo->actions().end(); ++j) {
+        QObject::connect((*j), SIGNAL(triggered()),
+                         this, SLOT(CargaPlanilla()));
+    }
+
+    Archivo->addMenu(ArchivoNuevo);
+
+    ArchivoAbrir = new QAction(Archivo);
+    ArchivoAbrir->setText("Abrir");
+    Archivo->addAction(ArchivoAbrir);
+
+    ArchivoGuardar = new QAction(Archivo);
+    ArchivoGuardar->setText("Guardar");
+    Archivo->addAction(ArchivoGuardar);
+
+    ArchivoGuardarComo = new QAction(Archivo);
+    ArchivoGuardarComo->setText("Guardar Como");
+    Archivo->addAction(ArchivoGuardarComo);
 
 //Menu Ver
     Ver = new QMenu;
@@ -129,4 +137,21 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::CargaPlanilla()
+{
+    QObject* action = sender();
+     if(action)
+     {
+        QString ruta = action->objectName();
+        printf ("string de ruta: %s\n", ruta.toStdString().c_str());
+        QString aux;
+        aux.append("background-image: ");
+        aux.append(ruta);
+        aux.append("Imagen.jpg");
+        ui->centralWidget->setStyleSheet(aux);
+        printf ("string auxiliar: %s\n", aux.toStdString().c_str());
+     }
+
 }

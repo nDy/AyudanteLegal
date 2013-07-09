@@ -11,6 +11,7 @@ public:
         this->setText(text);
         route = file;
     }
+    QString* getRoute();
 };
 
 #endif // WQACTION_H
