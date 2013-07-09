@@ -135,23 +135,76 @@ void MainWindow::GenerarMenu(){
 
 void MainWindow::CargaPlanilla()
 {
+    CargaImagen();
+    CargaTextBox();
+}
+
+void MainWindow::CargaTextBox()
+{
     QObject* action = sender();
      if(action)
      {
-        QString ruta = action->objectName();
-        printf ("string de ruta: %s\n", ruta.toStdString().c_str());
-        QString aux;
-        aux.append(ruta);
-        aux.append("Imagen.png");
-        printf ("string auxiliar: %s\n", aux.toStdString().c_str());
-        label = new QLabel;
-        pic = new QPixmap(aux);
-        label->setPixmap(*pic);
-        ui->scrollArea->setWidget(label);
+         QString ruta = action->objectName();
+         printf ("string de ruta: %s\n", ruta.toStdString().c_str());
+         QString aux;
+         aux.append(ruta);
+         aux.append("Mapa.txt");
+         QFile file(aux);
+         if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+                return;
+
+         file.readLine();
+         int Xo,Yo,Xf,Yf;
+
+            while (!file.atEnd()) {
+                QString linea = file.readLine();
+                //parseline
+                Xo=linea.section('|',0,0).toInt();
+                Yo=linea.section('|',1,1).toInt();
+                Xf=linea.section('|',2,2).toInt();
+                Yf=linea.section('|',3,3).toInt();
+                //feedtolinegeometry
+                QLineEdit* cuadro;
+                cuadro = new QLineEdit(label);
+                cuadro->setGeometry(Xo,Yo,Xf-Xo,Yf-Yo);
+                cuadro->setStyleSheet("QLineEdit{background: white;}");
+                cuadro->raise();
+            }
+
+
+
+     }
+}
+
+
+void MainWindow::CargaImagen()
+{
+    QObject* action = sender();
+     if(action)
+     {
+         QString ruta = action->objectName();
+         printf ("string de ruta: %s\n", ruta.toStdString().c_str());
+         QString aux;
+         aux.append(ruta);
+         aux.append("Imagen.png");
+         printf ("string auxiliar: %s\n", aux.toStdString().c_str());
+         label = new QLabel;
+         pic = new QPixmap(aux);
+         label->setPixmap(*pic);
+
+         QWidget* w;
+         w = new QWidget();
+         ui->scrollArea->setWidget(w);
+         QVBoxLayout* lay;
+         lay = new QVBoxLayout();
+         w->setLayout(lay);
+         w->layout()->addWidget(label);
+
         scaleImage(0.343289086);
      }
 
 }
+
 
 void MainWindow::ZoomIn()
 {

@@ -4,6 +4,9 @@
 #include <QMainWindow>
 #include <QLabel>
 #include <QScrollBar>
+#include <QLineEdit>
+#include <QStackedLayout>
+#include <QFile>
 
 namespace Ui {
 class MainWindow;
@@ -24,6 +27,8 @@ public:
     void adjustScrollBar(QScrollBar *scrollBar, double factor);
     void GenerarMenu();
     void GenerarConexiones();
+    void CargaImagen();
+    void CargaTextBox();
 public slots:
     void CargaPlanilla();
     void ZoomIn();
@@ -35,7 +40,7 @@ private:
     //Menu
         QMenu* Archivo;
             QMenu* ArchivoNuevo;
-                QList<QAction*> ArchivoNuevoLista;
+                QList<QAction*>* ArchivoNuevoLista;
             QAction* ArchivoAbrir;
             QAction* ArchivoImprimir;
             QAction* ArchivoGuardar;
@@ -55,7 +60,7 @@ private:
 
         QMenu* Formato;
             QMenu* FormatoFuente;
-                QList<QAction*> FormatoFuenteLista;
+                QList<QAction*>* FormatoFuenteLista;
             QAction* FormatoBase;
             QAction* FormatoMinimo;
 };
