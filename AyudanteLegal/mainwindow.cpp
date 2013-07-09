@@ -242,6 +242,9 @@ void MainWindow::CargaTextBox()
             cuadro->setGeometry(Xo,Yo,Xf-Xo,Yf-Yo);
             cuadro->setStyleSheet("QLineEdit{background: white;}");
             cuadro->raise();
+            QFont* BaseFont;
+            BaseFont = new QFont("Times", 15);
+            cuadro->setFont(*BaseFont);
             CuadrosDeTexto->append(cuadro);
         }
 
@@ -268,10 +271,15 @@ void MainWindow::Imprimir()
 
     QPainter painter;
 
-    //dibujar texto en el painter
-
     painter.begin(&printer);
 
+    //dibujar texto en el painter
+    QList<QLineEdit*>::iterator j;
+    for (j = CuadrosDeTexto->begin(); j != CuadrosDeTexto->end(); ++j) {
+        painter.drawText((*j)->geometry().x(),(*j)->geometry().y(),(*j)->text());
+    }
+
+    painter.end();
 
 }
 
