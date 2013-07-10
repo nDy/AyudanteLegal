@@ -356,7 +356,34 @@ void MainWindow::GuardarComo()
 
 void MainWindow::AjustarTexto()
 {
-    printf("TextoCambia");
+    QObject* action = sender();
+    if(action)
+    {
+        QFont font;
+        font = ((QLineEdit*)action)->font();
+        if (font.pointSizeF()<=1)
+            return;
+        QString str;
+        str = ((QLineEdit*)action)->text();
+
+        QFontMetrics fm(font);
+
+        int width=fm.width(str);
+
+        if(width > ((QLineEdit*)action)->width()){
+            while ((width > ((QLineEdit*)action)->width())){
+                //El texto es mas grande
+                qreal aux;
+                aux = font.pointSize()-(1/5.0);
+                font.setPointSize(aux);
+                QFontMetrics auxfm(font);
+                width=auxfm.width(str);
+                ((QLineEdit*)action)->setFont(font);
+            }
+        }else{
+            //El texto es mas pequeno
+        }
+    }
 }
 
 void MainWindow::scaleImage(double factor){
