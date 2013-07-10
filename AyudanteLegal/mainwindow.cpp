@@ -55,8 +55,6 @@ void MainWindow::GenerarConexiones(){
                          this, SLOT(CargaPlanilla()));
     }
 
-    //ResizeTextConections
-
     //ZoomConections
     connect(VerZoomIn, SIGNAL(triggered()), this, SLOT(ZoomIn()));
     connect(VerZoomOut, SIGNAL(triggered()), this, SLOT(ZoomOut()));
@@ -261,6 +259,13 @@ void MainWindow::CargaTextBox()
         }
         file.close();
     }
+
+    //ResizeTextConections
+    QList<QLineEdit*>::iterator j;
+    for (j = CuadrosDeTexto->begin(); j != CuadrosDeTexto->end(); ++j) {
+        QObject::connect((*j), SIGNAL(textChanged(QString)),
+                         this, SLOT(AjustarTexto()));
+    }
 }
 
 void MainWindow::ZoomIn()
@@ -347,6 +352,11 @@ void MainWindow::GuardarComo()
         out << (*j)->text()<<"|"<<(*j)->geometry().x()<<"|"<<(*j)->geometry().y()<<"|"<<(*j)->height()<<"|"<<(*j)->width() << "\n";
     }
     file.close();
+}
+
+void MainWindow::AjustarTexto()
+{
+    printf("TextoCambia");
 }
 
 void MainWindow::scaleImage(double factor){

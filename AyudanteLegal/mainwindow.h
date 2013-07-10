@@ -65,6 +65,7 @@ public slots:
     void Abrir();
     void Guardar();
     void GuardarComo();
+    void AjustarTexto();
     
 private:
     //ui
