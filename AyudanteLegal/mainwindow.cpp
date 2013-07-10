@@ -24,6 +24,7 @@
 #include "ui_mainwindow.h"
 #include "dirent.h"
 #include "stdio.h"
+#include <a.out.h>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -36,6 +37,8 @@ MainWindow::MainWindow(QWidget *parent) :
     this->GenerarMenu();
 
     this->GenerarConexiones();
+
+    this->DocumentoGuardado = false;
 }
 
 MainWindow::~MainWindow()
@@ -57,7 +60,12 @@ void MainWindow::GenerarConexiones(){
     //ZoomConections
     connect(VerZoomIn, SIGNAL(triggered()), this, SLOT(ZoomIn()));
     connect(VerZoomOut, SIGNAL(triggered()), this, SLOT(ZoomOut()));
+
+    //FileConections
     connect(ArchivoImprimir, SIGNAL(triggered()), this, SLOT(Imprimir()));
+    connect(ArchivoAbrir, SIGNAL(triggered()), this, SLOT(Abrir()));
+    connect(ArchivoGuardar, SIGNAL(triggered()), this, SLOT(Guardar()));
+    connect(ArchivoGuardarComo, SIGNAL(triggered()), this, SLOT(GuardarComo()));
 
 
 }
@@ -184,6 +192,8 @@ void MainWindow::CargaPlanilla()
     CargaImagen();
 
     CargaTextBox();
+
+    DocumentoGuardado = false;
 }
 
 void MainWindow::CargaImagen()
@@ -196,8 +206,10 @@ void MainWindow::CargaImagen()
         aux.append(ruta);
         aux.append("Imagen.png");
         label = new QLabel;
-        pic = new QPixmap(aux);
-        label->setPixmap(*pic);
+        Pic = new QPixmap(aux);
+        RutaPic = new QString();
+        RutaPic->append(aux);
+        label->setPixmap(*Pic);
 
         QWidget* w;
         w = new QWidget();
@@ -247,7 +259,7 @@ void MainWindow::CargaTextBox()
             cuadro->setFont(*BaseFont);
             CuadrosDeTexto->append(cuadro);
         }
-
+        file.close();
     }
 }
 
@@ -283,9 +295,63 @@ void MainWindow::Imprimir()
 
 }
 
+void MainWindow::Abrir()
+{
+    QString filename = QFileDialog::getOpenFileName(this);
+
+    QFile file(filename);
+    if (file.open(QIODevice::ReadOnly|QIODevice::Text)){
+        //desechar cabeza de imagen
+        //cargar imagen
+        //cerrar archivo
+        file.close();
+    }
+
+}
+
+
+void MainWindow::Guardar()
+{
+    if(!DocumentoGuardado){
+        GuardarComo();
+        DocumentoGuardado = true;
+    }
+
+}
+
+void MainWindow::GuardarComo()
+{
+    QString nombre;
+    nombre = QFileDialog::getSaveFileName(this, tr("Save File"),
+                                          "/home/untitled.LegalMap",
+                                          tr("Legal Map File (*.LegalMap)"));
+
+    printf ("%s\n",nombre.toStdString().c_str());
+    QFile file(nombre);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)){
+        return;
+        printf ("Open file failed\n");
+
+    }
+
+    QTextStream out(&file);
+
+    //imagen
+    out<<"IMGDATA="<<"\n";
+    out<<RutaPic->toStdString().c_str()<<"\n";
+    //separador
+    out<<"FILEDATA="<<"\n";
+    //data
+    QList<QLineEdit*>::iterator j;
+    for (j = CuadrosDeTexto->begin(); j != CuadrosDeTexto->end(); ++j) {
+        out << (*j)->text()<<"|"<<(*j)->geometry().x()<<"|"<<(*j)->geometry().y()<<"|"<<(*j)->height()<<"|"<<(*j)->width() << "\n";
+    }
+    file.close();
+}
+
 void MainWindow::scaleImage(double factor){
     scaleFactor *= factor;
-    label->setPixmap(pic->scaled(pic->width()*scaleFactor,pic->height()*scaleFactor));
+    label->setPixmap(Pic->scaled(Pic->width()*scaleFactor,Pic->height()*scaleFactor));
 
     adjustScrollBar(ui->scrollArea->horizontalScrollBar(), factor);
     adjustScrollBar(ui->scrollArea->verticalScrollBar(), factor);

@@ -32,6 +32,8 @@
 #include <QPainter>
 #include <QPrintDialog>
 #include <QPrinter>
+#include <QFileDialog>
+#include <QTextStream>
 
 namespace Ui {
 class MainWindow;
@@ -60,39 +62,44 @@ public slots:
     void ZoomIn();
     void ZoomOut();
     void Imprimir();
+    void Abrir();
+    void Guardar();
+    void GuardarComo();
     
 private:
     //ui
-    Ui::MainWindow *ui;
+    Ui::MainWindow *ui = nullptr;
     //Menu
-    QMenu* Archivo;
-    QMenu* ArchivoNuevo;
-    QList<QAction*>* ArchivoNuevoLista;
-    QAction* ArchivoAbrir;
-    QAction* ArchivoImprimir;
-    QAction* ArchivoGuardar;
-    QAction* ArchivoGuardarComo;
+    QMenu* Archivo = nullptr;
+    QMenu* ArchivoNuevo = nullptr;
+    QList<QAction*>* ArchivoNuevoLista = nullptr;
+    QAction* ArchivoAbrir = nullptr;
+    QAction* ArchivoImprimir = nullptr;
+    QAction* ArchivoGuardar = nullptr;
+    QAction* ArchivoGuardarComo = nullptr;
 
-    QMenu* Ver;
-    QAction* VerZoomIn;
-    QAction* VerZoomOut;
-    QAction* VerHoja;
-    QAction* VerPagina;
-    QAction* VerEdicion;
+    QMenu* Ver = nullptr;
+    QAction* VerZoomIn = nullptr;
+    QAction* VerZoomOut = nullptr;
+    QAction* VerHoja = nullptr;
+    QAction* VerPagina = nullptr;
+    QAction* VerEdicion = nullptr;
 
-    QMenu* Edicion;
-    QAction* EdicionCopiar;
-    QAction* EdicionCortar;
-    QAction* EdicionPegar;
+    QMenu* Edicion = nullptr;
+    QAction* EdicionCopiar = nullptr;
+    QAction* EdicionCortar = nullptr;
+    QAction* EdicionPegar = nullptr;
 
-    QMenu* Formato;
-    QMenu* FormatoFuente;
-    QList<QAction*>* FormatoFuenteLista;
-    QAction* FormatoBase;
-    QAction* FormatoMinimo;
+    QMenu* Formato = nullptr;
+    QMenu* FormatoFuente = nullptr;
+    QList<QAction*>* FormatoFuenteLista = nullptr;
+    QAction* FormatoBase = nullptr;
+    QAction* FormatoMinimo = nullptr;
     //misc
-    QPixmap* pic;
-    QList<QLineEdit*>* CuadrosDeTexto;
+    QPixmap* Pic = nullptr;
+    QString* RutaPic = nullptr;
+    QList<QLineEdit*>* CuadrosDeTexto = nullptr;
+    bool DocumentoGuardado;
 
 };
 
