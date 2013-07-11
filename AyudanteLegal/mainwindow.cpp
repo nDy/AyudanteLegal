@@ -217,7 +217,7 @@ void MainWindow::CargaImagen()
         w->setLayout(lay);
         w->layout()->addWidget(label);
 
-        scaleImage(0.343289086);
+        scaleImage(0.323);
     }
 
 }
@@ -378,6 +378,7 @@ void MainWindow::AjustarTexto()
                 font.setPointSize(aux);
                 QFontMetrics auxfm(font);
                 width=auxfm.width(str);
+                printf("trata de usar %f",font.pointSizeF());
                 ((QLineEdit*)action)->setFont(font);
             }
         }else{
