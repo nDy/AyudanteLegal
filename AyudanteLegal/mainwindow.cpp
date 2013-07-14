@@ -280,19 +280,21 @@ void MainWindow::ZoomOut()
 
 void MainWindow::Imprimir()
 {
-    QPrinter printer;
-    QPrintDialog *dialog = new QPrintDialog(&printer, this);
+    QPrinter* printer;
+    printer = new QPrinter(QPrinter::PrinterMode::ScreenResolution);
+    QPrintDialog *dialog = new QPrintDialog(*&printer, this);
 
     if (dialog->exec() != QDialog::Accepted)
         return;
 
     QPainter painter;
 
-    painter.begin(&printer);
+    painter.begin(*&printer);
 
     //dibujar texto en el painter
     QList<QLineEdit*>::iterator j;
     for (j = CuadrosDeTexto->begin(); j != CuadrosDeTexto->end(); ++j) {
+        painter.setFont((*j)->font());
         painter.drawText((*j)->geometry().x(),(*j)->geometry().y(),(*j)->text());
     }
 
