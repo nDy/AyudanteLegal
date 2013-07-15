@@ -295,7 +295,7 @@ void MainWindow::Imprimir()
     QList<QLineEdit*>::iterator j;
     for (j = CuadrosDeTexto->begin(); j != CuadrosDeTexto->end(); ++j) {
         painter.setFont((*j)->font());
-        painter.drawText((*j)->geometry().x(),(*j)->geometry().y(),(*j)->text());
+        painter.drawText((*j)->geometry().x(),(*j)->geometry().y()+(*j)->height()/2,(*j)->text());
     }
 
     painter.end();
@@ -333,7 +333,6 @@ void MainWindow::GuardarComo()
                                           "/home/untitled.LegalMap",
                                           tr("Legal Map File (*.LegalMap)"));
 
-    printf ("%s\n",nombre.toStdString().c_str());
     QFile file(nombre);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)){
         return;
@@ -380,7 +379,6 @@ void MainWindow::AjustarTexto()
                 font.setPointSize(aux);
                 QFontMetrics auxfm(font);
                 width=auxfm.width(str);
-                printf("trata de usar %f",font.pointSizeF());
                 ((QLineEdit*)action)->setFont(font);
             }
         }else{
