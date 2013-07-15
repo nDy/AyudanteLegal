@@ -242,20 +242,22 @@ void MainWindow::CargaTextBox()
         while (!file.atEnd()) {
             QString linea = file.readLine();
             //parseline
-            Xo=linea.section('|',0,0).toInt();
-            Yo=linea.section('|',1,1).toInt();
-            Xf=linea.section('|',2,2).toInt();
-            Yf=linea.section('|',3,3).toInt();
-            //feedtolinegeometry
-            QLineEdit* cuadro;
-            cuadro = new QLineEdit(label);
-            cuadro->setGeometry(Xo,Yo,Xf-Xo,Yf-Yo);
-            cuadro->setStyleSheet("QLineEdit{background: white;}");
-            cuadro->raise();
-            QFont* BaseFont;
-            BaseFont = new QFont("Times", 15);
-            cuadro->setFont(*BaseFont);
-            CuadrosDeTexto->append(cuadro);
+            if (linea.at(0)!='#'&&!linea.isEmpty()){
+                Xo=linea.section('|',0,0).toInt();
+                Yo=linea.section('|',1,1).toInt();
+                Xf=linea.section('|',2,2).toInt();
+                Yf=linea.section('|',3,3).toInt();
+                //feedtolinegeometry
+                QLineEdit* cuadro;
+                cuadro = new QLineEdit(label);
+                cuadro->setGeometry(Xo,Yo,Xf-Xo,Yf-Yo);
+                cuadro->setStyleSheet("QLineEdit{background: white;}");
+                cuadro->raise();
+                QFont* BaseFont;
+                BaseFont = new QFont("Times", 15);
+                cuadro->setFont(*BaseFont);
+                CuadrosDeTexto->append(cuadro);
+            }
         }
         file.close();
     }
