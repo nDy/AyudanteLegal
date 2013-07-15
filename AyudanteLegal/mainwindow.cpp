@@ -235,7 +235,6 @@ void MainWindow::CargaTextBox()
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
             return;
 
-        file.readLine();
         int Xo,Yo,Xf,Yf;
 
         CuadrosDeTexto = new QList<QLineEdit*>;

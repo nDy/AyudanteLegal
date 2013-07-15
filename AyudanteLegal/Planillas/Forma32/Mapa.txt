@@ -1,11 +1,13 @@
-Xo|Yo|Xf|Yf|Type
+#Formato de linea: Xo|Yo|Xf|Yf|Type
+#Forma32
+# Linea sin titulo
 38|117|499|143|T
 510|117|760|143|T
 559|143|650|160|T
 697|143|720|160|T
 722|143|745|160|T
-# Esto es un comentario de prueba
 747|143|775|160|T
+#A. Datos del causante o donante
 38|181|586|204|T
 38|204|586|227|T
 38|227|374|249|T
@@ -15,6 +17,7 @@ Xo|Yo|Xf|Yf|Type
 604|232|660|249|T
 662|232|716|249|T
 718|232|774|249|T
+#B. Datos del Representante
 38|279|586|302|T
 38|302|586|325|T
 38|325|374|347|T
@@ -22,6 +25,7 @@ Xo|Yo|Xf|Yf|Type
 604|279|774|302|T
 604|302|774|325|T
 604|325|774|347|T
+#C. Tipo de Herencia
 591|411|630|423|T
 631|411|669|423|T
 670|411|709|423|T
@@ -32,4 +36,3 @@ Xo|Yo|Xf|Yf|Type
 600|476|638|488|T
 639|476|678|488|T
 578|446|778|468|T
-
