@@ -310,7 +310,13 @@ void MainWindow::Abrir()
     QFile file(filename);
     if (file.open(QIODevice::ReadOnly|QIODevice::Text)){
         //desechar cabeza de imagen
+        file.readLine();
         //cargar imagen
+        QString ruta;
+        ruta.append(file.readLine());
+        //desechar cabeza de cajas de texto
+        file.readLine();
+        //Cargar cajas de texto
         //cerrar archivo
         file.close();
     }
@@ -363,8 +369,6 @@ void MainWindow::AjustarTexto()
     {
         QFont font;
         font = ((QLineEdit*)action)->font();
-        if (font.pointSizeF()<=1)
-            return;
         QString str;
         str = ((QLineEdit*)action)->text();
 
@@ -372,19 +376,20 @@ void MainWindow::AjustarTexto()
 
         int width=fm.width(str);
 
-        if(width > ((QLineEdit*)action)->width()){
-            while ((width > ((QLineEdit*)action)->width())){
-                //El texto es mas grande
+        if ((width >= ((QLineEdit*)action)->width())){
+            if(font.pointSize()<=(0.20)){
+                ((QLineEdit*)action)->backspace();
+            }else{
                 qreal aux;
-                aux = font.pointSize()-(1/5.0);
+                aux = font.pointSize()-(0.15);
                 font.setPointSize(aux);
-                QFontMetrics auxfm(font);
-                width=auxfm.width(str);
                 ((QLineEdit*)action)->setFont(font);
             }
-        }else{
-            //El texto es mas pequeno
+
+            QFontMetrics auxfm(font);
+            width=auxfm.width(str);
         }
+
     }
 }
 
