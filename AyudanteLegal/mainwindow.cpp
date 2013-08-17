@@ -22,10 +22,7 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "stdio.h"
-#include <a.out.h>
 #include <QDir>
-#include <iostream>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -86,11 +83,9 @@ void MainWindow::GenerarMenu(){
     Dir.setPath(path);
 
     QFileInfoList list = Dir.entryInfoList();
-    std::cout << "     Bytes Filename" << std::endl;
     for (int i = 0; i < list.size(); ++i) {
         QFileInfo fileInfo = list.at(i);
         if (fileInfo.fileName().size()>2){
-            std::cout << qPrintable(QString("%1 %2").arg(fileInfo.size(), 10).arg(fileInfo.fileName()));
             QAction* aux;
             static QString* file;
             file = new QString();
@@ -101,7 +96,6 @@ void MainWindow::GenerarMenu(){
             aux->setText(fileInfo.fileName());
             aux->setObjectName(*file);
             ArchivoNuevo->addAction(aux);
-            std::cout << std::endl;
         }
     }
 
