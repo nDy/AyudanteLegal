@@ -22,9 +22,10 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "dirent.h"
 #include "stdio.h"
 #include <a.out.h>
+#include <QDir>
+#include <iostream>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -77,37 +78,32 @@ void MainWindow::GenerarMenu(){
     ArchivoNuevo->setTitle("Nuevo");
 
     //Carga de planillas
-    DIR *dir;
-    struct dirent *ent;
-    if ((dir = opendir ("../AyudanteLegal/Planillas")) != NULL) {
-        //Lee Los nombres de las formas
-        while ((ent = readdir (dir)) != NULL) {
-            DIR *formadir;
-            struct dirent *formaent;
-            if ((formadir = opendir (ent->d_name)) != NULL) {
-                //Lee componentes de la forma
-                while ((formaent = readdir (dir)) != NULL) {
-                    if(formaent->d_name[0]!='.'){
-                        QAction* aux;
-                        static QString* file;
-                        file = new QString();
-                        file->append("../AyudanteLegal/Planillas/");
-                        file->append(formaent->d_name);
-                        file->append("/");
-                        aux = new QAction(ArchivoNuevo);
-                        aux->setText(formaent->d_name);
-                        aux->setObjectName(*file);
-                        ArchivoNuevo->addAction(aux);
-                    }
-                }
-            }
-        }
-        closedir (dir);
-    } else {
-        //No se puede abrir el directorio
-        perror ("No se puede abrir el directorio");
-    }
 
+    QDir Dir;
+    QString path;
+    path = Dir.homePath();
+    path.append("/Planillas");
+    Dir.setPath(path);
+
+    QFileInfoList list = Dir.entryInfoList();
+    std::cout << "     Bytes Filename" << std::endl;
+    for (int i = 0; i < list.size(); ++i) {
+        QFileInfo fileInfo = list.at(i);
+        if (fileInfo.fileName().size()>2){
+            std::cout << qPrintable(QString("%1 %2").arg(fileInfo.size(), 10).arg(fileInfo.fileName()));
+            QAction* aux;
+            static QString* file;
+            file = new QString();
+            file->append("../AyudanteLegal/Planillas/");
+            file->append(fileInfo.fileName());
+            file->append("/");
+            aux = new QAction(ArchivoNuevo);
+            aux->setText(fileInfo.fileName());
+            aux->setObjectName(*file);
+            ArchivoNuevo->addAction(aux);
+            std::cout << std::endl;
+        }
+    }
 
     Archivo->addMenu(ArchivoNuevo);
 
